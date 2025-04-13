@@ -1,5 +1,4 @@
 ﻿
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using WPFBrowser.Commands;
@@ -74,6 +73,7 @@ public class MainWindowViewModel : GenericPropertyChanged
     
     private HistoryWindow _historyWindow;
     private readonly HistoryService _historyService;
+    public TabsService TabsService { get => _tabsService; }
     private readonly TabsService _tabsService;
     private Tab _selectedTab;
 
@@ -81,36 +81,25 @@ public class MainWindowViewModel : GenericPropertyChanged
     {
         _historyService = App.HistoryService;
         _tabsService = App.TabsService;
-        PreviousPageCommand = new RelayCommand((object? p) => _currentPageId >= 2, PreviousPage);
-        NextPageCommand = new RelayCommand((object? p) => _currentPageId == 15, NextPage);
+        PreviousPageCommand = new RelayCommand((object? p) => _tabsService.CurrentTab.SmallHistory.Count() > 1, PreviousPage);
+        NextPageCommand = new RelayCommand((object? p) => _tabsService.CurrentTab.SmallHistoryPointer != _tabsService.CurrentTab.SmallHistory.Count(), NextPage);
         LoadPageCommand = new RelayCommand((object? p) => true, LoadPage);
         HistoryWindowCommand = new RelayCommand((object? p) => true, ShowHistoryWindow);
-        if (!_tabsService.Tabs.Any())
-        {
-            _tabsService.AddTab("https://google.com");
-        }
     }
 
     private void PreviousPage(object? p)
     {
-        int t = _currentPageId - 1;
-        CurrentUri = new Uri(_historyService.History.Where(n => n.Id == _currentPageId - 1).First().Uri);
-        _currentPageId = t; 
+        _tabsService.PreviousPage();
     }
 
     private void NextPage(object? p)
     {
-        CurrentUri = new Uri(_historyService.History.Where(n => n.Id == _currentPageId + 1).First().Uri);
+        _tabsService.PreviousPage();
     }
 
     private void LoadPage(object? p)
     {
-        Uri? uri = UriValidator.ValidateUri(CurrentTextBoxUri);
-        if (uri == null)
-        {
-            return;
-        }
-        CurrentUri = uri;
+        _tabsService.LoadCurrentTabPage(CurrentTextBoxUri);
     }
 
     private void ShowHistoryWindow(object? p)
