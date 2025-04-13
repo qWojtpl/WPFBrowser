@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using WPFBrowser.Data;
+using WPFBrowser.Services;
 
 namespace WPFBrowser.Models;
 
@@ -11,7 +12,7 @@ public class Tab : GenericPropertyChanged
     [Key]
     public int Id { get; set; }
 
-    public Uri Uri
+    public Uri? Uri
     {
         get => _uri;
         set
@@ -19,6 +20,8 @@ public class Tab : GenericPropertyChanged
             if (_uri != value)
             {
                 _uri = value;
+                TabsService.CurrentUri = _uri.ToString();
+                TabsService.SaveTab(this);
                 OnPropertyChanged();
             }
         }
@@ -42,5 +45,8 @@ public class Tab : GenericPropertyChanged
     private bool _isSelected;
     public int SmallHistoryPointer { get; set; } = 0;
     public List<string> SmallHistory { get; set; } = new();
+    
+    [NotMapped]
+    public TabsService TabsService { get; set; }
 
 }

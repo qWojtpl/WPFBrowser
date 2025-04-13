@@ -61,7 +61,7 @@
                     VerticalContentAlignment="Center">
             </Button>
             <TextBox Grid.Column="2" FontSize="18"
-                     Text="{Binding CurrentTextBoxUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding TabsService.CurrentUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
                 <TextBox.InputBindings>
                     <KeyBinding Command="{Binding LoadPageCommand}" Key="Enter" />

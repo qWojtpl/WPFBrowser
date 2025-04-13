@@ -1,37 +1,67 @@
 using System.Collections.ObjectModel;
+using WPFBrowser.Data;
 using WPFBrowser.Models;
 using WPFBrowser.Repositories;
 using WPFBrowser.Validators;
 
 namespace WPFBrowser.Services;
 
-public class TabsService
+public class TabsService : GenericPropertyChanged
 {
 
-    private readonly HistoryRepository _historyRepository;
+    private readonly HistoryService _historyService;
     private readonly TabsRepository _tabsRepository;
     public ObservableCollection<Tab> Tabs { get; private set; } = new();
     public Tab CurrentTab { get; private set; }
-    
-    public TabsService(HistoryRepository historyRepository, TabsRepository tabsRepository)
+
+    public string CurrentUri
     {
-        _historyRepository = historyRepository;
+        get => _currentUri;
+        set
+        {
+            if (_currentUri != value)
+            {
+                _currentUri = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+    
+    private string _currentUri;
+    
+    public TabsService(HistoryService historyService, TabsRepository tabsRepository)
+    {
+        _historyService = historyService;
         _tabsRepository = tabsRepository;
-        Tabs = new ObservableCollection<Tab>(_tabsRepository.GetAll());
+        List<Tab> tabs = _tabsRepository.GetAll().ToList();
+        foreach (Tab tab in tabs)
+        {
+            tab.TabsService = this;
+        }
+        Tabs = new ObservableCollection<Tab>(tabs);
         if (!Tabs.Any())
         {
             AddTab("https://google.com");
         }
         CurrentTab = Tabs.First(n => n.IsSelected);
+        CurrentUri = CurrentTab.Uri.ToString();
     }
 
     public void AddTab(string uri)
     {
         Tab tab = new Tab();
-        tab.Id = Tabs.Last().Id + 1;
+        if (Tabs.Count() == 0)
+        {
+            tab.Id = 1;
+        }
+        else
+        {
+            tab.Id = Tabs.Max(n => n.Id) + 1;
+        }
+        tab.TabsService = this;
         SetCurrentTab(tab);
-        LoadCurrentTabPage(uri, true);
         _tabsRepository.Create(tab);
+        LoadCurrentTabPage(uri);
         Tabs.Add(tab);
     }
 
@@ -43,6 +73,10 @@ public class TabsService
         }
         tab.IsSelected = true;
         CurrentTab = tab;
+        if (tab.Uri != null)
+        {
+            CurrentUri = tab.Uri.ToString();
+        }
     }
 
     public void OpenTab(int id)
@@ -59,7 +93,13 @@ public class TabsService
         Tabs.Remove(tab);
     }
 
-    public void LoadCurrentTabPage(string strUri, bool skipUpdate = false)
+    public void SaveTab(Tab tab)
+    {
+        _tabsRepository.Update(tab);
+        _historyService.AddHistoryRecord(tab.Uri.ToString());
+    }
+
+    public void LoadCurrentTabPage(string strUri)
     {
         Uri uri = UriValidator.ValidateUri(strUri);
         if (uri == null)
@@ -69,10 +109,7 @@ public class TabsService
         CurrentTab.Uri = uri;
         CurrentTab.SmallHistory.Add(strUri);
         CurrentTab.SmallHistoryPointer = CurrentTab.SmallHistory.Count;
-        if (!skipUpdate)
-        {
-            _tabsRepository.Update(CurrentTab);
-        }
+        _tabsRepository.Update(CurrentTab);
     }
 
     public void PreviousPage()

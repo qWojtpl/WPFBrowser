@@ -12,51 +12,13 @@ namespace WPFBrowser.ViewModels;
 
 public class MainWindowViewModel : GenericPropertyChanged
 {
-    
-    private static readonly string _startPage = "https://google.com";
     public ICommand PreviousPageCommand { get; }    
     public ICommand NextPageCommand { get; }
-
     public ICommand LoadPageCommand { get; }
     public ICommand NewTabCommand { get; }
     public ICommand HistoryWindowCommand { get; }
     public ICommand OpenTabCommand { get; }
     public ICommand RemoveTabCommand { get; }
-
-    private int _currentPageId;
-
-    public string CurrentTextBoxUri
-    {
-        get => _currentTextBoxUri;
-        set
-        {
-            if (_currentTextBoxUri != value)
-            {
-                _currentTextBoxUri = value;
-                OnPropertyChanged();
-            }
-        }
-    }
-
-    private string _currentTextBoxUri = _startPage;
-
-    public Uri CurrentUri
-    {
-        get => _currentUri;
-        set
-        {
-            if (_currentUri != value)
-            {
-                _currentUri = value;
-                OnPropertyChanged();
-                CurrentTextBoxUri = _currentUri.ToString();
-                _historyService.AddHistoryRecord(_currentUri.ToString());
-                _currentPageId = _historyService.History.First().Id;
-            }
-        }
-    }
-
-    private Uri _currentUri = new Uri(_startPage);
 
     public HistoryWindow HistoryWindow
     {
@@ -105,7 +67,7 @@ public class MainWindowViewModel : GenericPropertyChanged
 
     private void LoadPage(object? p)
     {
-        _tabsService.LoadCurrentTabPage(CurrentTextBoxUri);
+        _tabsService.LoadCurrentTabPage(TabsService.CurrentUri);
     }
 
     private void NewTab(object? p)
@@ -116,7 +78,6 @@ public class MainWindowViewModel : GenericPropertyChanged
     private void OpenTab(object? p)
     {
         _tabsService.OpenTab((int) p);
-        CurrentTextBoxUri = _tabsService.CurrentTab.Uri.ToString();
     }
 
     private void RemoveTab(object? p)
@@ -125,7 +86,7 @@ public class MainWindowViewModel : GenericPropertyChanged
         _tabsService.RemoveTab((int) p);
         if (openLater)
         {
-            _tabsService.OpenTab(_tabsService.Tabs.First().Id);
+            OpenTab(_tabsService.Tabs.First().Id);
         }
     }
 

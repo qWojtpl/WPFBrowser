@@ -75,7 +75,7 @@ public partial class App : Application
         {
             if (_tabsService == null)
             {
-                _tabsService = new TabsService(HistoryRepository, TabsRepository);
+                _tabsService = new TabsService(HistoryService, TabsRepository);
             }
             return _tabsService;
         }
