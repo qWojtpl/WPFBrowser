@@ -28,7 +28,7 @@ public class TabsService
     public void AddTab(string uri)
     {
         Tab tab = new Tab();
-        tab.Id = Tabs.Count() + 1;
+        tab.Id = Tabs.Last().Id + 1;
         SetCurrentTab(tab);
         LoadCurrentTabPage(uri, true);
         _tabsRepository.Create(tab);
@@ -50,6 +50,13 @@ public class TabsService
         Tab tab = Tabs.Where(n => n.Id == id)!.First();
         SetCurrentTab(tab);
         LoadCurrentTabPage(tab.Uri.ToString());
+    }
+
+    public void RemoveTab(int id)
+    {
+        Tab tab = Tabs.Where(n => n.Id == id)!.First();
+        _tabsRepository.Delete(tab);
+        Tabs.Remove(tab);
     }
 
     public void LoadCurrentTabPage(string strUri, bool skipUpdate = false)

@@ -22,18 +22,24 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="{Binding Uri}" Command="{Binding DataContext.OpenTabCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding Id}">
+                        <Button Content="{Binding Uri}"
+                                Command="{Binding DataContext.OpenTabCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding Id}" MaxWidth="250">
                             <Button.Style>
                                 <Style TargetType="Button">
-                                    <Setter Property="Background" Value="LightGray"/>
+                                    <Setter Property="Background" Value="LightGray" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                            <Setter Property="Background" Value="Gray"/>
-                                            <Setter Property="Foreground" Value="White"/>
+                                            <Setter Property="Background" Value="Gray" />
+                                            <Setter Property="Foreground" Value="White" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </Button.Style>
+                        </Button>
+                        <Button Content="X"
+                                Command="{Binding DataContext.RemoveTabCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding Id}">
                         </Button>
                     </StackPanel>
                 </DataTemplate>
@@ -46,9 +52,17 @@
                 <ColumnDefinition />
                 <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Content="←" FontSize="16" Command="{Binding PreviousPageCommand}" Background="Transparent" BorderBrush="Transparent" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Button>
-            <Button Grid.Column="1" Content="→" FontSize="16" Command="{Binding NextPageCommand}" HorizontalContentAlignment="Left" Background="Transparent" BorderBrush="Transparent" VerticalContentAlignment="Center"></Button>
-            <TextBox Grid.Column="2" FontSize="18" Text="{Binding CurrentTextBoxUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
+            <Button Grid.Column="0" Content="←" FontSize="16" Command="{Binding PreviousPageCommand}"
+                    Background="Transparent" BorderBrush="Transparent" HorizontalContentAlignment="Right"
+                    VerticalContentAlignment="Center">
+            </Button>
+            <Button Grid.Column="1" Content="→" FontSize="16" Command="{Binding NextPageCommand}"
+                    HorizontalContentAlignment="Left" Background="Transparent" BorderBrush="Transparent"
+                    VerticalContentAlignment="Center">
+            </Button>
+            <TextBox Grid.Column="2" FontSize="18"
+                     Text="{Binding CurrentTextBoxUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
                 <TextBox.InputBindings>
                     <KeyBinding Command="{Binding LoadPageCommand}" Key="Enter" />
                 </TextBox.InputBindings>
@@ -58,20 +72,24 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="⏳" Command="{Binding HistoryWindowCommand}" Background="Transparent" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
-                <Button Grid.Column="1" Content="+" Command="{Binding NewTabCommand}" Background="Transparent" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                <Button Grid.Column="0" Content="⏳" Command="{Binding HistoryWindowCommand}" Background="Transparent"
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+                <Button Grid.Column="1" Content="+" Command="{Binding NewTabCommand}" Background="Transparent"
+                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
             </Grid>
         </Grid>
         <ItemsControl Grid.Row="2" ItemsSource="{Binding TabsService.Tabs}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <wv2:WebView2 Source="{Binding Uri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Window}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}}">
+                    <wv2:WebView2 Source="{Binding Uri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Window}}">
                         <wv2:WebView2.Style>
                             <Style TargetType="wv2:WebView2">
-                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Setter Property="Visibility" Value="Collapsed" />
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Setter Property="Visibility" Value="Visible" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -80,6 +98,6 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        
+
     </Grid>
 </Window>

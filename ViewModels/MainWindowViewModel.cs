@@ -21,6 +21,7 @@ public class MainWindowViewModel : GenericPropertyChanged
     public ICommand NewTabCommand { get; }
     public ICommand HistoryWindowCommand { get; }
     public ICommand OpenTabCommand { get; }
+    public ICommand RemoveTabCommand { get; }
 
     private int _currentPageId;
 
@@ -88,6 +89,7 @@ public class MainWindowViewModel : GenericPropertyChanged
         LoadPageCommand = new RelayCommand((object? p) => true, LoadPage);
         NewTabCommand = new RelayCommand((object? p) => true, NewTab);
         OpenTabCommand = new RelayCommand((object? p) => true, OpenTab);
+        RemoveTabCommand = new RelayCommand((object? p) => _tabsService.Tabs.Count() > 1, RemoveTab);
         HistoryWindowCommand = new RelayCommand((object? p) => true, ShowHistoryWindow);
     }
 
@@ -115,6 +117,16 @@ public class MainWindowViewModel : GenericPropertyChanged
     {
         _tabsService.OpenTab((int) p);
         CurrentTextBoxUri = _tabsService.CurrentTab.Uri.ToString();
+    }
+
+    private void RemoveTab(object? p)
+    {
+        bool openLater = _tabsService.CurrentTab.Id == (int)p;
+        _tabsService.RemoveTab((int) p);
+        if (openLater)
+        {
+            _tabsService.OpenTab(_tabsService.Tabs.First().Id);
+        }
     }
 
     private void ShowHistoryWindow(object? p)
