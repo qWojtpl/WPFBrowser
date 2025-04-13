@@ -5,7 +5,6 @@ using WPFBrowser.Commands;
 using WPFBrowser.Data;
 using WPFBrowser.Models;
 using WPFBrowser.Services;
-using WPFBrowser.Validators;
 using WPFBrowser.Views;
 
 namespace WPFBrowser.ViewModels;

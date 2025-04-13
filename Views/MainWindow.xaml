@@ -60,7 +60,7 @@
                     HorizontalContentAlignment="Left" Background="Transparent" BorderBrush="Transparent"
                     VerticalContentAlignment="Center">
             </Button>
-            <TextBox Grid.Column="2" FontSize="18"
+            <TextBox Grid.Column="2" FontSize="16"
                      Text="{Binding TabsService.CurrentUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                      HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
                 <TextBox.InputBindings>
