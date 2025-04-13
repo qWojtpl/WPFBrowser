@@ -25,6 +25,21 @@ public class Tab : GenericPropertyChanged
     }
 
     private Uri _uri;
+
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set
+        {
+            if (_isSelected != value)
+            {
+                _isSelected = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    private bool _isSelected;
     public int SmallHistoryPointer { get; set; } = 0;
     public List<string> SmallHistory { get; set; } = new();
 

@@ -15,4 +15,5 @@ public partial class MainWindow : Window
         Application.Current.MainWindow.WindowState = WindowState.Maximized;
         DataContext = new MainWindowViewModel();
     }
+    
 }

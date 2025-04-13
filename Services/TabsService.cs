@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using WPFBrowser.Data;
 using WPFBrowser.Models;
 using WPFBrowser.Repositories;
 using WPFBrowser.Validators;
@@ -23,24 +22,37 @@ public class TabsService
         {
             AddTab("https://google.com");
         }
-        CurrentTab = Tabs.First();
+        CurrentTab = Tabs.First(n => n.IsSelected);
     }
 
     public void AddTab(string uri)
     {
         Tab tab = new Tab();
+        tab.Id = Tabs.Count() + 1;
         SetCurrentTab(tab);
-        LoadCurrentTabPage(uri);
+        LoadCurrentTabPage(uri, true);
         _tabsRepository.Create(tab);
         Tabs.Add(tab);
     }
 
     public void SetCurrentTab(Tab tab)
     {
+        if (CurrentTab != null)
+        {
+            CurrentTab.IsSelected = false;
+        }
+        tab.IsSelected = true;
         CurrentTab = tab;
     }
 
-    public void LoadCurrentTabPage(string strUri)
+    public void OpenTab(int id)
+    {
+        Tab tab = Tabs.Where(n => n.Id == id)!.First();
+        SetCurrentTab(tab);
+        LoadCurrentTabPage(tab.Uri.ToString());
+    }
+
+    public void LoadCurrentTabPage(string strUri, bool skipUpdate = false)
     {
         Uri uri = UriValidator.ValidateUri(strUri);
         if (uri == null)
@@ -50,7 +62,10 @@ public class TabsService
         CurrentTab.Uri = uri;
         CurrentTab.SmallHistory.Add(strUri);
         CurrentTab.SmallHistoryPointer = CurrentTab.SmallHistory.Count;
-        _tabsRepository.Update(CurrentTab);
+        if (!skipUpdate)
+        {
+            _tabsRepository.Update(CurrentTab);
+        }
     }
 
     public void PreviousPage()

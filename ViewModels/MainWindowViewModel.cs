@@ -18,7 +18,9 @@ public class MainWindowViewModel : GenericPropertyChanged
     public ICommand NextPageCommand { get; }
 
     public ICommand LoadPageCommand { get; }
+    public ICommand NewTabCommand { get; }
     public ICommand HistoryWindowCommand { get; }
+    public ICommand OpenTabCommand { get; }
 
     private int _currentPageId;
 
@@ -84,6 +86,8 @@ public class MainWindowViewModel : GenericPropertyChanged
         PreviousPageCommand = new RelayCommand((object? p) => _tabsService.CurrentTab.SmallHistory.Count() > 1, PreviousPage);
         NextPageCommand = new RelayCommand((object? p) => _tabsService.CurrentTab.SmallHistoryPointer != _tabsService.CurrentTab.SmallHistory.Count(), NextPage);
         LoadPageCommand = new RelayCommand((object? p) => true, LoadPage);
+        NewTabCommand = new RelayCommand((object? p) => true, NewTab);
+        OpenTabCommand = new RelayCommand((object? p) => true, OpenTab);
         HistoryWindowCommand = new RelayCommand((object? p) => true, ShowHistoryWindow);
     }
 
@@ -100,6 +104,17 @@ public class MainWindowViewModel : GenericPropertyChanged
     private void LoadPage(object? p)
     {
         _tabsService.LoadCurrentTabPage(CurrentTextBoxUri);
+    }
+
+    private void NewTab(object? p)
+    {
+        _tabsService.AddTab("https://google.com");
+    }
+
+    private void OpenTab(object? p)
+    {
+        _tabsService.OpenTab((int) p);
+        CurrentTextBoxUri = _tabsService.CurrentTab.Uri.ToString();
     }
 
     private void ShowHistoryWindow(object? p)
