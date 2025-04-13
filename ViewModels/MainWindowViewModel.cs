@@ -45,8 +45,8 @@ public class MainWindowViewModel : GenericPropertyChanged
     {
         _historyService = App.HistoryService;
         _tabsService = App.TabsService;
-        PreviousPageCommand = new RelayCommand((object? p) => _tabsService.CurrentTab.SmallHistory.Count() > 1, PreviousPage);
-        NextPageCommand = new RelayCommand((object? p) => _tabsService.CurrentTab.SmallHistoryPointer != _tabsService.CurrentTab.SmallHistory.Count(), NextPage);
+        PreviousPageCommand = new RelayCommand((object? p) => true, PreviousPage);
+        NextPageCommand = new RelayCommand((object? p) => true, NextPage);
         LoadPageCommand = new RelayCommand((object? p) => true, LoadPage);
         NewTabCommand = new RelayCommand((object? p) => true, NewTab);
         OpenTabCommand = new RelayCommand((object? p) => true, OpenTab);
@@ -61,7 +61,7 @@ public class MainWindowViewModel : GenericPropertyChanged
 
     private void NextPage(object? p)
     {
-        _tabsService.PreviousPage();
+        _tabsService.NextPage();
     }
 
     private void LoadPage(object? p)

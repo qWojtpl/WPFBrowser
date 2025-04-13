@@ -67,9 +67,9 @@ public class TabsService : GenericPropertyChanged
 
     public void SetCurrentTab(Tab tab)
     {
-        if (CurrentTab != null)
+        foreach (Tab t in Tabs)
         {
-            CurrentTab.IsSelected = false;
+            t.IsSelected = false;
         }
         tab.IsSelected = true;
         CurrentTab = tab;
@@ -107,14 +107,31 @@ public class TabsService : GenericPropertyChanged
             return;
         }
         CurrentTab.Uri = uri;
-        CurrentTab.SmallHistory.Add(strUri);
-        CurrentTab.SmallHistoryPointer = CurrentTab.SmallHistory.Count;
+        CurrentTab.SmallHistory.Add(uri.ToString());
+        CurrentTab.SmallHistoryPointer = CurrentTab.SmallHistory.Count - 1;
         _tabsRepository.Update(CurrentTab);
     }
 
     public void PreviousPage()
     {
         CurrentTab.SmallHistoryPointer--;
+        if (CurrentTab.SmallHistoryPointer < 0)
+        {
+            CurrentTab.SmallHistoryPointer = 0;
+            return;
+        }
+        CurrentTab.Uri = new Uri(CurrentTab.SmallHistory[CurrentTab.SmallHistoryPointer]);
+        _tabsRepository.Update(CurrentTab);
+    }
+
+    public void NextPage()
+    {
+        CurrentTab.SmallHistoryPointer++;
+        if (CurrentTab.SmallHistoryPointer >= CurrentTab.SmallHistory.Count)
+        {
+            CurrentTab.SmallHistoryPointer = CurrentTab.SmallHistory.Count - 1;
+            return;
+        }
         CurrentTab.Uri = new Uri(CurrentTab.SmallHistory[CurrentTab.SmallHistoryPointer]);
         _tabsRepository.Update(CurrentTab);
     }

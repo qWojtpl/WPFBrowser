@@ -43,7 +43,21 @@ public class Tab : GenericPropertyChanged
     }
 
     private bool _isSelected;
-    public int SmallHistoryPointer { get; set; } = 0;
+
+    public int SmallHistoryPointer
+    {
+        get => _smallHistoryPointer;
+        set
+        {
+            if (_smallHistoryPointer != value)
+            {
+                _smallHistoryPointer = value;
+                OnPropertyChanged();
+            }
+        }
+    }
+
+    private int _smallHistoryPointer = 0;
     public List<string> SmallHistory { get; set; } = new();
     
     [NotMapped]
