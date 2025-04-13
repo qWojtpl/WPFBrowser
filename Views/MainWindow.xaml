@@ -1,0 +1,39 @@
+﻿<Window x:Class="WPFBrowser.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFBrowser.Views"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        mc:Ignorable="d"
+        Title="WPF Browser" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="25" />
+                <ColumnDefinition Width="25" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="100" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="←" FontSize="16" Command="{Binding PreviousPageCommand}" Background="Transparent" BorderBrush="Transparent" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Button>
+            <Button Grid.Column="1" Content="→" FontSize="16" HorizontalContentAlignment="Left" Background="Transparent" BorderBrush="Transparent" VerticalContentAlignment="Center"></Button>
+            <TextBox Grid.Column="2" FontSize="18" Text="{Binding CurrentTextBoxUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
+                <TextBox.InputBindings>
+                    <KeyBinding Command="{Binding LoadPageCommand}" Key="Enter" />
+                </TextBox.InputBindings>
+            </TextBox>
+            <Grid Grid.Column="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="⏳" Command="{Binding HistoryWindowCommand}" Background="Transparent" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
+            </Grid>
+        </Grid>
+        <wv2:WebView2 Grid.Row="1" Source="{Binding CurrentUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></wv2:WebView2>
+    </Grid>
+</Window>
