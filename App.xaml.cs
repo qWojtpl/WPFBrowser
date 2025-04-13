@@ -27,7 +27,7 @@ public partial class App : Application
 
     private static AppDbContext? _context;
 
-    private static HistoryRepository HistoryRepository
+    public static HistoryRepository HistoryRepository
     {
         get
         {
@@ -41,6 +41,20 @@ public partial class App : Application
     
     private static HistoryRepository? _historyRepository;
 
+    public static TabsRepository TabsRepository
+    {
+        get
+        {
+            if (_tabsRepository == null)
+            {
+                _tabsRepository = new TabsRepository(DbContext);
+            }
+            return _tabsRepository;
+        }
+    }
+    
+    private static TabsRepository? _tabsRepository;
+
     public static HistoryService HistoryService
     {
         get
@@ -50,10 +64,23 @@ public partial class App : Application
                 _historyService = new HistoryService(HistoryRepository);
             }
             return _historyService;
-            
         }
     }
     
     private static HistoryService _historyService;
+
+    public static TabsService TabsService
+    {
+        get
+        {
+            if (_tabsService == null)
+            {
+                _tabsService = new TabsService(TabsRepository);
+            }
+            return _tabsService;
+        }
+    }
+    
+    private static TabsService _tabsService;
 
 }

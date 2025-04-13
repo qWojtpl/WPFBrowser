@@ -1,8 +1,10 @@
 ﻿
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using WPFBrowser.Commands;
 using WPFBrowser.Data;
+using WPFBrowser.Models;
 using WPFBrowser.Services;
 using WPFBrowser.Validators;
 using WPFBrowser.Views;
@@ -71,16 +73,22 @@ public class MainWindowViewModel : GenericPropertyChanged
     }
     
     private HistoryWindow _historyWindow;
-
     private readonly HistoryService _historyService;
+    private readonly TabsService _tabsService;
+    private Tab _selectedTab;
 
     public MainWindowViewModel()
     {
         _historyService = App.HistoryService;
+        _tabsService = App.TabsService;
         PreviousPageCommand = new RelayCommand((object? p) => _currentPageId >= 2, PreviousPage);
         NextPageCommand = new RelayCommand((object? p) => _currentPageId == 15, NextPage);
         LoadPageCommand = new RelayCommand((object? p) => true, LoadPage);
         HistoryWindowCommand = new RelayCommand((object? p) => true, ShowHistoryWindow);
+        if (!_tabsService.Tabs.Any())
+        {
+            _tabsService.AddTab("https://google.com");
+        }
     }
 
     private void PreviousPage(object? p)

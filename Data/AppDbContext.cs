@@ -8,6 +8,7 @@ public class AppDbContext : DbContext
 {
 
     public DbSet<HistoryElement> History { get; set; }
+    public DbSet<Tab> Tabs { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
