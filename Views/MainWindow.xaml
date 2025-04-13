@@ -20,7 +20,7 @@
                 <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="←" FontSize="16" Command="{Binding PreviousPageCommand}" Background="Transparent" BorderBrush="Transparent" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"></Button>
-            <Button Grid.Column="1" Content="→" FontSize="16" HorizontalContentAlignment="Left" Background="Transparent" BorderBrush="Transparent" VerticalContentAlignment="Center"></Button>
+            <Button Grid.Column="1" Content="→" FontSize="16" Command="{Binding NextPageCommand}" HorizontalContentAlignment="Left" Background="Transparent" BorderBrush="Transparent" VerticalContentAlignment="Center"></Button>
             <TextBox Grid.Column="2" FontSize="18" Text="{Binding CurrentTextBoxUri, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center">
                 <TextBox.InputBindings>
                     <KeyBinding Command="{Binding LoadPageCommand}" Key="Enter" />

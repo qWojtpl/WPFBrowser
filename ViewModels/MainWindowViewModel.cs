@@ -13,9 +13,13 @@ public class MainWindowViewModel : GenericPropertyChanged
 {
     
     private static readonly string _startPage = "https://google.com";
-    public ICommand PreviousPageCommand { get; }
+    public ICommand PreviousPageCommand { get; }    
+    public ICommand NextPageCommand { get; }
+
     public ICommand LoadPageCommand { get; }
     public ICommand HistoryWindowCommand { get; }
+
+    private int _currentPageId;
 
     public string CurrentTextBoxUri
     {
@@ -42,6 +46,8 @@ public class MainWindowViewModel : GenericPropertyChanged
                 _currentUri = value;
                 OnPropertyChanged();
                 CurrentTextBoxUri = _currentUri.ToString();
+                _historyService.AddHistoryRecord(_currentUri.ToString());
+                _currentPageId = _historyService.History.First().Id;
             }
         }
     }
@@ -71,14 +77,22 @@ public class MainWindowViewModel : GenericPropertyChanged
     public MainWindowViewModel()
     {
         _historyService = App.HistoryService;
-        PreviousPageCommand = new RelayCommand((object? p) => _historyService.History.Any(), PreviousPage);
+        PreviousPageCommand = new RelayCommand((object? p) => _currentPageId >= 2, PreviousPage);
+        NextPageCommand = new RelayCommand((object? p) => _currentPageId == 15, NextPage);
         LoadPageCommand = new RelayCommand((object? p) => true, LoadPage);
         HistoryWindowCommand = new RelayCommand((object? p) => true, ShowHistoryWindow);
     }
 
     private void PreviousPage(object? p)
     {
-        CurrentUri = new Uri(_historyService.History.Last().Uri);
+        int t = _currentPageId - 1;
+        CurrentUri = new Uri(_historyService.History.Where(n => n.Id == _currentPageId - 1).First().Uri);
+        _currentPageId = t; 
+    }
+
+    private void NextPage(object? p)
+    {
+        CurrentUri = new Uri(_historyService.History.Where(n => n.Id == _currentPageId + 1).First().Uri);
     }
 
     private void LoadPage(object? p)
@@ -89,7 +103,6 @@ public class MainWindowViewModel : GenericPropertyChanged
             return;
         }
         CurrentUri = uri;
-        _historyService.AddHistoryRecord(uri.ToString());
     }
 
     private void ShowHistoryWindow(object? p)

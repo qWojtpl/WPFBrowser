@@ -6,7 +6,13 @@
         xmlns:local="clr-namespace:WPFBrowser.Views"
         mc:Ignorable="d"
         Title="Browsing history" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+    <ListView ItemsSource="{Binding History}" >
+        <ListView.View>
+            <GridView AllowsColumnReorder="True" ColumnHeaderToolTip="Browsing history">
+                <GridViewColumn DisplayMemberBinding="{Binding Path=Id}" Header="ID" Width="100" />
+                <GridViewColumn DisplayMemberBinding="{Binding Path=Uri}" Header="URI" Width="400" />
+                <GridViewColumn DisplayMemberBinding="{Binding Path=Date}" Header="Date" Width="300" />
+            </GridView>
+        </ListView.View>
+    </ListView>
 </Window>

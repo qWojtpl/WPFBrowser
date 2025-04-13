@@ -13,7 +13,7 @@ public class HistoryService
     public HistoryService(IRepository<HistoryElement> historyRepository)
     {
         _historyRepository = historyRepository;
-        History = new ObservableCollection<HistoryElement>(_historyRepository.GetAll());
+        History = new ObservableCollection<HistoryElement>(_historyRepository.GetAll().OrderByDescending(n => n.Id));
     }
 
     public void AddHistoryRecord(string uri)
@@ -23,7 +23,7 @@ public class HistoryService
             Uri = uri,
             Date = DateTime.Now
         };
-        History.Add(element);
+        History.Insert(0, element);
         _historyRepository.Create(element);
     }
     
